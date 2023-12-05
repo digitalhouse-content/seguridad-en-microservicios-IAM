@@ -1,0 +1,33 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          api-gateway:
+            issuer-uri: http://localhost:8080/realms/feign-reino
+        registration:
+          api-gateway:
+            provider: api-gateway
+            scope: openid
+            client-id: feign-gateway-client
+            client-secret: AeFCNdIMuC44xhCTmJ77XGBK1MseoOaw
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:9090/login/oauth2/code/keycloak
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: users-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/users/**
+server:
+  port: 9090
+
+
+logging:
+    level:
+        org:
+            springframework:
+                security: DEBUG
